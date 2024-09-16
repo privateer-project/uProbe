@@ -1,0 +1,10 @@
+*.manifest
+dist/*
+Pipfile.lock
+build/**
+
+**/*.pem
+
+**/*.log
+
+**/__pycache__

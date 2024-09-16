@@ -1,0 +1,25 @@
+services:
+  probe:
+    image: <privateer uProbe image>
+    container_name: uprobe
+    devices:
+      - "/dev/sgx_enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
+    security_opt:
+      - seccomp=/home/privateer/infrastructure-provider/docker.json
+    volumes:
+      - ./manifests/uProbe.manifest.sgx:/app/uProbe.manifest.sgx:ro
+      - ./manifests/uProbe.sig:/app/uProbe.sig:ro
+      - ./manifests/uProbe.manifest:/app/uProbe.manifest:ro
+      - ./uProbe:/app/dist/uProbe/uProbe:ro
+      - ./hosts:/etc/hosts:ro
+    networks:
+      probes:
+        ipv4_address: 10.10.5.20
+
+networks:
+  probes:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.5.0/24 

@@ -1,0 +1,30 @@
+# Copyright (C) 2023 Gramine contributors
+# SPDX-License-Identifier: BSD-3-Clause
+
+libos.entrypoint = "/privateer/uProbe"
+loader.log_level = "{{ log_level }}"
+
+loader.env.LD_LIBRARY_PATH = "/lib:/privateer/_internal/lib"
+loader.entrypoint = "file:{{ gramine.libos }}"
+loader.argv = ["/privateer/uProbe", "1f34ac23be"]
+
+
+fs.mounts = [
+  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "/privateer", uri = "file:/app/dist/uProbe" },
+  { path = "/etc/hosts", uri = "file:/etc/hosts" }
+]
+
+sgx.debug = true
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+sgx.trusted_files = [
+  "file:/app/dist/uProbe/",
+  "file:{{ gramine.libos }}",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:/etc/hosts"
+]
+
+sgx.allowed_files = [
+  "file:uProbe_1f34ac23be.log"
+]
